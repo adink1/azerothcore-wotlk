@@ -71,9 +71,7 @@ public:
             return false;
         }
 
-        PetStable const* petStable = player->GetPetStable();
-
-        if (petStable && (petStable->CurrentPet || petStable->GetUnslottedHunterPet()))
+        if (player->GetPetGUID())
         {
             handler->PSendSysMessage("You already have a pet");
             handler->SetSentErrorMessage(true);

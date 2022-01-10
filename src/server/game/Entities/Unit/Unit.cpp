@@ -10168,15 +10168,10 @@ void Unit::SetMinion(Minion* minion, bool apply)
                 if (oldPet != minion && (oldPet->IsPet() || minion->IsPet() || oldPet->GetEntry() != minion->GetEntry()))
                 {
                     // remove existing minion pet
-                    if (Pet* oldPetAsPet = oldPet->ToPet())
-                    {
-                        oldPetAsPet->Remove(PET_SAVE_NOT_IN_SLOT);
-                    }
+                    if (oldPet->IsPet())
+                        ((Pet*)oldPet)->Remove(PET_SAVE_AS_CURRENT);
                     else
-                    {
                         oldPet->UnSummon();
-                    }
-
                     SetPetGUID(minion->GetGUID());
                     SetMinionGUID(ObjectGuid::Empty);
                 }
@@ -10244,7 +10239,6 @@ void Unit::SetMinion(Minion* minion, bool apply)
         {
             // All summoned by totem minions must disappear when it is removed.
             if (SpellInfo const* spInfo = sSpellMgr->GetSpellInfo(minion->ToTotem()->GetSpell()))
-            {
                 for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
                 {
                     if (spInfo->Effects[i].Effect != SPELL_EFFECT_SUMMON)
@@ -10252,7 +10246,6 @@ void Unit::SetMinion(Minion* minion, bool apply)
 
                     RemoveAllMinionsByEntry(spInfo->Effects[i].MiscValue);
                 }
-            }
         }
 
         if (GetTypeId() == TYPEID_PLAYER)
